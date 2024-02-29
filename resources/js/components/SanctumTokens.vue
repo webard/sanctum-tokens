@@ -8,49 +8,50 @@
     </Heading>
     <Card>
       <div
-        class="flex flex-col md:flex-row md:items-center py-3 border-b border-gray-200 dark:border-gray-700"
-      ></div>
-      <div
         v-if="tokens.length"
         class="overflow-hidden overflow-x-auto relative"
       >
-        <table class="table w-full" cellspacing="0" cellpadding="0">
+        <table class="w-full divide-y divide-gray-100 dark:divide-gray-700">
           <thead class="bg-gray-50 dark:bg-gray-800">
             <tr>
               <th
-                class="td-fit uppercase text-xxs text-gray-500 tracking-wide pl-5 pr-2 py-2"
-              >
-                <span class="sr-only">spacer</span>
-              </th>
-              <th
-                class="text-left px-2 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
+                class="td-fit text-left px-6 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
               >
                 <span>{{ __("Name") }}</span>
               </th>
               <th
                 v-if="panel.fields[0].showAbilities"
-                class="text-left px-2 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
+                class="text-left px-6 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
               >
                 <span>{{ __("Abilities") }}</span>
               </th>
               <th
-                class="text-left px-2 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
+                class="text-left px-6 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
               >
                 <span>{{ __("Last Used") }}</span>
               </th>
 
+              <th
+                class="text-left px-2 whitespace-nowrap uppercase text-gray-500 text-xxs tracking-wide py-2"
+              >
+                <span>{{ __("Expiration Date") }}</span>
+              </th>
+
               <!-- View, Edit, and Delete -->
-              <th class="uppercase text-xxs tracking-wide px-2 py-2">
+              <th class="uppercase text-xxs tracking-wide px-6 py-2">
                 <span class="sr-only">{{ __("Controls") }}</span>
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
             <TokenRow
               v-for="token in tokens"
               :key="token.id"
               :token="token"
               :show-abilities="panel.fields[0].showAbilities"
+              :default-expiration-duration="
+                panel.fields[0].defaultExpirationDuration
+              "
               @revoke-token="revokeToken"
             />
           </tbody>

@@ -1,5 +1,5 @@
 {
-  "name": "jeffbeltran/sanctum-tokens",
+  "name": "webard/sanctum-tokens",
   "description": "A Laravel Nova resource tool for sanctum tokens.",
   "keywords": [
     "laravel",
@@ -21,6 +21,12 @@
       "providers": [
         "Jeffbeltran\\SanctumTokens\\ToolServiceProvider"
       ]
+    }
+  },
+  "repositories": {
+    "nova": {
+        "type": "composer",
+        "url": "https://nova.laravel.com"
     }
   },
   "config": {

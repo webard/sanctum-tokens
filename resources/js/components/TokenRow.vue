@@ -1,10 +1,7 @@
 <template>
   <tr>
     <td
-      class="py-2 border-t border-gray-100 dark:border-gray-700 px-2 td-fit pl-5 pr-5 dark:bg-gray-800"
-    ></td>
-    <td
-      class="px-2 py-2 border-t border-gray-100 dark:border-gray-700 whitespace-nowrap dark:bg-gray-800"
+      class="px-6 py-2 whitespace-nowrap cursor-pointer dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900"
     >
       <div class="text-left text-left" via-resource="users" via-resource-id="1">
         <span class="whitespace-no-wrap">{{ token.name }}</span>
@@ -12,14 +9,14 @@
     </td>
     <td
       v-if="showAbilities"
-      class="px-2 py-2 border-t border-gray-100 dark:border-gray-700 whitespace-nowrap dark:bg-gray-800"
+      class="px-6 py-2 whitespace-nowrap cursor-pointer dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900"
     >
       <div class="text-left text-left" via-resource="users" via-resource-id="1">
         <span class="whitespace-no-wrap">{{ token.abilities }}</span>
       </div>
     </td>
     <td
-      class="px-2 py-2 border-t border-gray-100 dark:border-gray-700 whitespace-nowrap dark:bg-gray-800"
+      class="px-6 py-2 whitespace-nowrap cursor-pointer dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900"
     >
       <div
         class="text-left text-left"
@@ -31,12 +28,23 @@
       </div>
     </td>
     <td
-      class="py-2 border-t border-gray-100 dark:border-gray-700 px-2 td-fit text-right align-middle dark:bg-gray-800"
+      class="px-2 py-2 border-t border-gray-100 dark:border-gray-700 whitespace-nowrap dark:bg-gray-800"
+    >
+      <div class="text-left text-left" via-resource="users" via-resource-id="1">
+        <span
+          class="whitespace-no-wrap"
+          :class="expirationDate.cssClass ? expirationDate.cssClass : ''"
+          >{{ expirationDate.date }}</span
+        >
+      </div>
+    </td>
+    <td
+      class="py-2 cursor-pointer px-2 w-[1%] white-space-nowrap text-right align-middle dark:bg-gray-800 group-hover:bg-gray-50 dark:group-hover:bg-gray-900"
     >
       <div class="flex items-center justify-end space-x-0 text-gray-400">
         <button
           aria-label="Delete"
-          class="toolbar-button hover:text-primary-500 px-2 v-popper--has-tooltip"
+          class="inline-flex items-center justify-center h-9 w-9 hover:text-primary-500 dark:hover:text-primary-500 v-popper--has-tooltip"
           @click="showDeleteModal = true"
         >
           <svg
@@ -81,7 +89,12 @@ export default {
       required: true,
       type: Boolean,
     },
+    defaultExpirationDuration: {
+      required: true,
+      type: Number,
+    },
   },
+
   emits: ["revoke-token"],
   data() {
     return {
@@ -103,6 +116,46 @@ export default {
         return "—";
       }
     },
+    expirationDate() {
+      let tokenExpirationDate = this.token.expires_at
+        ? new Date(this.token.expires_at)
+        : null;
+      const defaultExpirationDate = this.defaultExpirationDuration;
+      if (defaultExpirationDate) {
+        const tokenCreationDate = new Date(this.token.created_at);
+        // Add default expiration time to created token date
+        const defaultTokenExpirationDate = new Date(
+          tokenCreationDate.getTime() + this.defaultExpirationDuration * 60000
+        );
+        const tokenCustomExpirationDate = this.token.expires_at
+          ? new Date(this.token.expires_at)
+          : null;
+        tokenExpirationDate = tokenCustomExpirationDate
+          ? tokenCustomExpirationDate < defaultTokenExpirationDate
+            ? tokenCustomExpirationDate
+            : defaultTokenExpirationDate
+          : defaultTokenExpirationDate;
+      }
+      const today = new Date();
+      const diffInDays = tokenExpirationDate
+        ? (today - tokenExpirationDate) / (1000 * 3600 * 24)
+        : null;
+      return tokenExpirationDate
+        ? {
+            date: tokenExpirationDate.toLocaleDateString(),
+            cssClass: diffInDays
+              ? diffInDays > -10 && diffInDays < 0
+                ? "warning-color"
+                : diffInDays > 0
+                ? "expired-color"
+                : ""
+              : null,
+          }
+        : {
+            date: "—",
+            cssClass: null,
+          };
+    },
   },
   methods: {
     revokeToken() {
@@ -113,4 +166,11 @@ export default {
 };
 </script>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+.warning-color {
+  color: rgb(249 115 22);
+}
+.expired-color {
+  color: rgb(239 68 68);
+}
+</style>

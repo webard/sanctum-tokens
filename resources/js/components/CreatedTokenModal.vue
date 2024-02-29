@@ -1,5 +1,5 @@
 <template>
-  <Modal :show="show">
+  <Modal :show="show" size="4xl">
     <div
       class="mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden"
     >
@@ -8,19 +8,29 @@
         <ModalContent>
           <div class="flex flex-col">
             <div class="flex flex-col space-y-2">
-              <div class="text-lg bg-gray-100 rounded p-4">
+              <div
+                class="text-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 hover:text-gray-500 active:text-gray-600 rounded p-4"
+              >
                 <button
                   v-tooltip="__('Copy to clipboard')"
                   type="button"
-                  class="flex items-center justify-between w-full hover:bg-gray-50 dark:hover:bg-gray-900 text-gray-500 dark:text-gray-400 hover:text-gray-500 active:text-gray-600 rounded-lg px-1 -mx-1"
-                  @click.prevent.stop="copyValueToClipboard(newToken)"
+                  class="flex items-center justify-between w-full text-gray-500 dark:text-gray-400 rounded-lg px-1 -mx-1"
+                  @click.prevent.stop="handleCopy(newToken)"
                 >
                   <span ref="theFieldValue">
                     {{ newToken }}
                   </span>
 
                   <Icon
-                    class="text-gray-500 dark:text-gray-400 ml-1"
+                    v-if="copied"
+                    class="text-green-500"
+                    :solid="true"
+                    type="check-circle"
+                    width="14"
+                  />
+                  <Icon
+                    v-if="!copied"
+                    class="text-gray-400 dark:text-gray-500"
                     :solid="true"
                     type="clipboard"
                     width="14"
@@ -50,41 +60,34 @@
   </Modal>
 </template>
 
-<script>
-export default {
-  props: {
-    newToken: {
-      required: true,
-      type: String,
-    },
-    show: { type: Boolean, default: false },
+<script setup>
+import { ref } from "vue";
+
+const copied = ref(false);
+
+defineProps({
+  newToken: {
+    required: true,
+    type: String,
   },
-  emits: ["confirmed"],
-  methods: {
-    handleConfirmed() {
-      this.$emit("confirmed");
+  show: { type: Boolean, default: false },
+});
+
+const emit = defineEmits(["confirmed"]);
+
+const handleConfirmed = () => {
+  emit("confirmed");
+};
+
+const handleCopy = (value) => {
+  navigator.clipboard.writeText(value).then(
+    function () {
+      copied.value = true;
+      setTimeout(() => (copied.value = !copied.value), 2000);
     },
-    copyValueToClipboard(value) {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(value);
-      } else if (window.clipboardData) {
-        window.clipboardData.setData("Text", value);
-      } else {
-        const input = document.createElement("input");
-        const [scrollTop, scrollLeft] = [
-          document.documentElement.scrollTop,
-          document.documentElement.scrollLeft,
-        ];
-        document.body.appendChild(input);
-        input.value = value;
-        input.focus();
-        input.select();
-        document.documentElement.scrollTop = scrollTop;
-        document.documentElement.scrollLeft = scrollLeft;
-        document.execCommand("copy");
-        input.remove();
-      }
-    },
-  },
+    function () {
+      copied.value = false;
+    }
+  );
 };
 </script>
