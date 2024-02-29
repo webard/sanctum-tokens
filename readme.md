@@ -27,7 +27,7 @@ This package is a fork of https://github.com/JeffBeltran/sanctum-tokens with:
 ## Installation
 
 ```
-composer require jeffbeltran/sanctum-tokens
+composer require webard/sanctum-tokens
 ```
 
 Register the plugin by adding `SanctumTokens::make()` to the array of fields in the Nova resource. Make sure the
