@@ -2,6 +2,13 @@
 
 This package allows you to use [Sanctum](https://laravel.com/docs/7.x/sanctum) to generate a Personal Access Tokens in [Nova](https://nova.laravel.com/).
 
+This package is a fork of https://github.com/JeffBeltran/sanctum-tokens with:
+- resized token modal to 4xl to fit token length
+- fixed copying
+- confirmation icon after copy
+- couple style improvements
+- integrated expiration date column from PR https://github.com/JeffBeltran/sanctum-tokens/pull/84
+
 ## Screenshot
 
 ![View without any tokens](https://user-images.githubusercontent.com/22965241/175853019-a161fd10-5fde-4895-a094-26a7555f45dc.png)
