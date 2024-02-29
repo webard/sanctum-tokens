@@ -8,6 +8,7 @@ This package is a fork of https://github.com/JeffBeltran/sanctum-tokens with:
 - confirmation icon after copy
 - couple style improvements
 - integrated expiration date column from PR https://github.com/JeffBeltran/sanctum-tokens/pull/84
+- visual fixes in dark mode
 
 ## Screenshot
 
