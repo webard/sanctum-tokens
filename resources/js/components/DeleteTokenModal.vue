@@ -10,7 +10,7 @@
             <div class="flex flex-col space-y-2">
               {{ __("Are you sure you want to revoke the following token?") }}
               <pre
-                class="p-4 rounded mt-3 text-red-500 text-center text-lg bg-gray-50 bor"
+                class="p-4 rounded mt-3 text-red-500 text-center text-lg bg-gray-100 dark:bg-gray-700 bor"
                 >{{ tokenName }}</pre
               >
             </div>
@@ -20,16 +20,17 @@
 
       <ModalFooter>
         <div class="ml-auto">
-          <LinkButton
+          <CancelButton
+            component="button"
             type="button"
-            class="mr-4"
+            class="ml-auto mr-3"
             @click.prevent="$emit('cancel')"
           >
             {{ __("Cancel") }}
-          </LinkButton>
-          <DangerButton type="button" @click.prevent="handleConfirmed">
+          </CancelButton>
+          <Button variant="solid" state="danger" type="button" @click.prevent="handleConfirmed">
             {{ __("Revoke Token") }}
-          </DangerButton>
+          </Button>
         </div>
       </ModalFooter>
     </div>
@@ -37,7 +38,12 @@
 </template>
 
 <script>
+import { Button } from 'laravel-nova-ui'
+
 export default {
+  components: {
+    Button,
+  },
   props: {
     tokenName: {
       required: true,

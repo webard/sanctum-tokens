@@ -41,7 +41,7 @@
     "vue-loader": "^17.1.1"
   },
   "dependencies": {
-    "lodash.debounce": "^4.0.8",
+    "laravel-nova-ui": "^0.4.12",
     "luxon": "^3.3.0"
   }
 }
